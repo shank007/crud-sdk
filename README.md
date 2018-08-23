@@ -16,15 +16,15 @@ node --version
 ```
 ```sh
 # Access the SDK using below command 
-npm install c8na-crud
+npm install crud-sdk
 
 # To save and install the SDK in your application package.json use below command.
-npm install -S c8na-crud
+npm install -S crud-sdk
 ```
 
 ## How to use crud-sdk
 ```sh
-var crud = require('c8na-crud');
+var crud = require('crud-sdk');
 
 # Create (Store data in MongoDB)
 crud.create(<mongodb-connection-string>, <db-name>, <collection-name>, {DATA in JSON Format}, function (err, data) {
