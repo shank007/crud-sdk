@@ -42,5 +42,12 @@ crud.delete(<mongodb-connection-string>, <db-name>, <collection-name>, {Delete C
 });
 
 #ReadById (Read Data from MongoDB using Mongo ObjectId)
+crud.readById(<mongodb-connection-string>, <db-name>, <collection-name>, <mongo-objectId>, function (err, result) {
+            if (err) // do something
+});
 
+#ReadByCondition (Read Data from MongoDB using condition)
+crud.readByCondition(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, function (err, result) {
+            if (err) // do something
+});
 ```
