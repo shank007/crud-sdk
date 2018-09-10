@@ -15,10 +15,10 @@ Make sure you have Node.js 8.9.0 or higher installed. If not, install it.
 node --version
 ```
 ```sh
-# Access the SDK using below command 
+# Access the SDK using below command within the project directory
 npm install crud-sdk
 
-# To save and install the SDK in your application package.json use below command.
+# To save and install the SDK in your application package.json use below command within the project directory.
 npm install -S crud-sdk
 ```
 
