@@ -1,6 +1,6 @@
 {
   "name": "crud-sdk",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A microservice that can be used by other applications to perform all CRUD operations for MongoDB.",
   "main": "dist/engine.js",
   "homepage": "https://github.com/shank007/crud-sdk#readme",
