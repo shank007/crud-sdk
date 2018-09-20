@@ -61,10 +61,6 @@ crud.sort(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condi
             if (err) // do something
 });
 
-#Indexing Collection (Indexes support the efficient resolution of queries for a collection)
-crud.index(<mongodb-connection-string>, <db-name>, <collection-name>, {Index Condition in JSON Format }, function (err, result) {
-            if (err) // do something
-});
 
 #Aggregate (Read and Aggregate Data from MongoDB to process data records and return computed results.)
 crud.aggregate(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, <aggregate-condition>, function (err, result) {
