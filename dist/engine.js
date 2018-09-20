@@ -6,5 +6,6 @@ module.exports.readByCondition = engine.readByCondition
 module.exports.update = engine.update
 module.exports.delete = engine.delete
 module.exports.sort = engine.sort
+module.exports.index = engine.index
 module.exports.aggregate = engine.aggregate
 module.exports.limit = engine.limit
