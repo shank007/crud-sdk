@@ -243,7 +243,7 @@ var aggregate = function (connectionString, dbName, collectionName, condition, a
 var limit = function (connectionString, dbName, collectionName, condition, limit, callback) {
     try {
         if (limit !== parseInt(limit, 10))
-            return callback("Limit should be integer value only.", {});
+            return callback({"error":"Limit should be integer value only."}, {});
 
 
         var db = mongo.db(connectionString + dbName, {
