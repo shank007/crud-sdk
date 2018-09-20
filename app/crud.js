@@ -139,7 +139,7 @@ function deleteData(connectionString, dbName, collectionName, condition, callbac
         db.bind(collectionName);
         db.collection(collectionName).remove(condition, function (err, result) {
             var data = {};
-            
+
             if (err) {
                 return callback(err, result);
             } else {
@@ -155,10 +155,121 @@ function deleteData(connectionString, dbName, collectionName, condition, callbac
         throw err;
     }
 }
-// }
+
+/**
+ * @author Girijashankar Mishra
+ * @description Read and Sort Data from MongoDB using condition
+ * @param {connectionString,dbName,collectionName,condition,sortCondition} req 
+ * @param {JSONObject} res 
+ */
+var sort = function (connectionString, dbName, collectionName, condition, sortCondition, callback) {
+    try {
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: false
+        });
+        // var queryData = JSON.parse(condition);
+        db.bind(collectionName);
+
+        db.collection(collectionName).find(condition).sort(sortCondition).toArray(function (err, result) {
+            if (err) {
+                return callback(err, result);
+            }
+            return callback(err, result);
+        });
+        db.close();
+    } catch (err) {
+        throw err;
+    }
+}
+
+/**
+ * @author Girijashankar Mishra
+ * @description Indexes support the efficient resolution of queries for a collection
+ * @param {connectionString,dbName,collectionName,indexCondition} req 
+ * @param {JSONObject} res 
+ */
+var index = function (connectionString, dbName, collectionName, indexCondition, callback) {
+    try {
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: false
+        });
+        // var queryData = JSON.parse(condition);
+        db.bind(collectionName);
+
+        db.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
+            if (err) {
+                return callback(err, result);
+            }
+            return callback(err, result);
+        });
+        db.close();
+    } catch (err) {
+        throw err;
+    }
+}
+
+/**
+ * @author Girijashankar Mishra
+ * @description Read and Aggregate Data from MongoDB to process data records and return computed results. 
+ * @param {connectionString,dbName,collectionName,condition,sortCondition} req 
+ * @param {JSONObject} res 
+ */
+var aggregate = function (connectionString, dbName, collectionName, condition, aggregateCondition, callback) {
+    try {
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: false
+        });
+        // var queryData = JSON.parse(condition);
+        db.bind(collectionName);
+
+        db.collection(collectionName).find(condition).aggregate(aggregateCondition).toArray(function (err, result) {
+            if (err) {
+                return callback(err, result);
+            }
+            return callback(err, result);
+        });
+        db.close();
+    } catch (err) {
+        throw err;
+    }
+}
+
+/**
+ * @author Girijashankar Mishra
+ * @description Read and Limit Data from MongoDB, that is the number of documents that you want to be displayed. 
+ * @param {connectionString,dbName,collectionName,condition,sortCondition} req 
+ * @param {JSONObject} res 
+ */
+var limit = function (connectionString, dbName, collectionName, condition, limit, callback) {
+    try {
+        if (limit !== parseInt(limit, 10))
+            return callback("Limit should be integer value only.", result);
+
+
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: false
+        });
+        // var queryData = JSON.parse(condition);
+        db.bind(collectionName);
+
+        db.collection(collectionName).find(condition).limit(limit).toArray(function (err, result) {
+            if (err) {
+                return callback(err, result);
+            }
+            return callback(err, result);
+        });
+        db.close();
+    } catch (err) {
+        throw err;
+    }
+}
 
 module.exports.create = create
 module.exports.readById = readById
 module.exports.readByCondition = readByCondition
 module.exports.update = updateData
 module.exports.delete = deleteData
+module.exports.sort = sort
+module.exports.index = index
+module.exports.aggregate = aggregate
+module.exports.limit = limit

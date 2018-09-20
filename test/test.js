@@ -13,7 +13,7 @@ describe('Create', function () {
         crud.create(connectionString, dbName, collectionName, {
             "petId": "C001",
             "petType": "Cat",
-            "petName": "Karla",
+            "petName": "Any",
             "petBreed": "Persian"
         }, function (err, data) {
             if (err) {
@@ -86,6 +86,62 @@ describe('Delete', function () {
             "petId": "D001"
         }, function (err, result) {
             if (err) console.error(err);
+            done();
+        });
+    });
+});
+
+describe('Create', function () {
+    var connectionString = "mongodb://localhost:27017/";
+    var dbName = "PET";
+    var collectionName = "PetStore";
+    it('create an entry in mongodb', function (done) {
+        crud.create(connectionString, dbName, collectionName, {
+            "petId": "C001",
+            "petType": "Cat",
+            "petName": "Jane",
+            "petBreed": "Persian"
+        }, function (err, data) {
+            if (err) {
+                console.error(err);
+            }
+            done();
+        });
+    });
+
+});
+
+describe('Create', function () {
+    var connectionString = "mongodb://localhost:27017/";
+    var dbName = "PET";
+    var collectionName = "PetStore";
+    it('create an entry in mongodb', function (done) {
+        crud.create(connectionString, dbName, collectionName, {
+            "petId": "C001",
+            "petType": "Cat",
+            "petName": "Bree",
+            "petBreed": "Persian"
+        }, function (err, data) {
+            if (err) {
+                console.error(err);
+            }
+            done();
+        });
+    });
+
+});
+
+describe('Sort Operation', function () {
+    var connectionString = "mongodb://localhost:27017/";
+    var dbName = "PET";
+    var collectionName = "PetStore";
+    it('sort operation by condition', function (done) {
+        crud.readByCondition(connectionString, dbName, collectionName, {
+            "petId": "C001"
+        },'sort',{ petName: 1 }, function (err, data) {
+            if (err) {
+                console.error(err);
+            }
             done();
         });
     });
