@@ -222,7 +222,7 @@ var aggregate = function (connectionString, dbName, collectionName, condition, a
         // var queryData = JSON.parse(condition);
         db.bind(collectionName);
 
-        db.collection(collectionName).find(condition).aggregate(aggregateCondition).toArray(function (err, result) {
+        db.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
             if (err) {
                 return callback(err, result);
             }
@@ -252,7 +252,7 @@ var limit = function (connectionString, dbName, collectionName, condition, limit
         // var queryData = JSON.parse(condition);
         db.bind(collectionName);
 
-        db.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
+        db.collection(collectionName).find(condition).limit(limit).toArray(function (err, result) {
             if (err) {
                 return callback(err, result);
             }
