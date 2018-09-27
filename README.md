@@ -42,12 +42,12 @@ crud.delete(<mongodb-connection-string>, <db-name>, <collection-name>, {Delete C
 });
 
 #ReadById (Read Data from MongoDB using Mongo ObjectId)
-crud.readById(<mongodb-connection-string>, <db-name>, <collection-name>, <mongo-objectId>, function (err, result) {
+crud.readById(<mongodb-connection-string>, <db-name>, <collection-name>, <mongo-objectId>, {Params Condition in JSON Format}, function (err, result) {
             if (err) // do something
 });
 
 #ReadByCondition (Read Data from MongoDB using condition)
-crud.readByCondition(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, function (err, result) {
+crud.readByCondition(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format},{Params Condition in JSON Format}, function (err, result) {
             if (err) // do something
 });
 
@@ -57,18 +57,18 @@ crud.readByCondition(<mongodb-connection-string>, <db-name>, <collection-name>, 
 });
 
 #Sort (Read and Sort Data from MongoDB using condition)
-crud.sort(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, { Sort Condition in JSON Format }, function (err, result) {
+crud.sort(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, { Sort Condition in JSON Format }, {Params Condition in JSON Format}, function (err, result) {
             if (err) // do something
 });
 
 
 #Aggregate (Read and Aggregate Data from MongoDB to process data records and return computed results.)
-crud.aggregate(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, <aggregate-condition>, function (err, result) {
+crud.aggregate(<mongodb-connection-string>, <db-name>, <collection-name>,  <aggregate-condition>, function (err, result) {
             if (err) // do something
 });
 
 #Limit (Read and Sort Data from MongoDB using condition)
-crud.limit(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, <limit-in-numbers>, function (err, result) {
+crud.limit(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, <limit-in-numbers>, {Params Condition in JSON Format}, function (err, result) {
             if (err) // do something
 });
 ```

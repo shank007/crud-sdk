@@ -43,14 +43,14 @@ function create(connectionString, dbName, collectionName, jsonData, callback) {
 /**
  * @author Girijashankar Mishra
  * @description Read Data from MongoDB using Mongo ObjectId
- * @param {connectionString, dbName,collectionName,id} req 
- * @param {JSONObject} res 
+ * @param {connectionString, dbName,collectionName,id, params} req 
+ * @param {JSONObject} res  
  */
-var readById = function (connectionString, dbName, collectionName, id, callback) {
+var readById = function (connectionString, dbName, collectionName, id, params, callback) {
     try {
         var db = mongo.db(connectionString + dbName, {
             native_parser: false
-        });
+        }, params);
         db.bind(collectionName);
         var o_id = new mongo.ObjectID(id);
 
@@ -72,10 +72,10 @@ var readById = function (connectionString, dbName, collectionName, id, callback)
 /**
  * @author Girijashankar Mishra
  * @description Read Data from MongoDB using condition
- * @param {connectionString,dbName,collectionName,condition} req 
+ * @param {connectionString,dbName,collectionName,condition, params} req 
  * @param {JSONObject} res 
  */
-var readByCondition = function (connectionString, dbName, collectionName, condition, callback) {
+var readByCondition = function (connectionString, dbName, collectionName, condition, params, callback) {
     try {
         var db = mongo.db(connectionString + dbName, {
             native_parser: false
@@ -83,7 +83,7 @@ var readByCondition = function (connectionString, dbName, collectionName, condit
         // var queryData = JSON.parse(condition);
         db.bind(collectionName);
 
-        db.collection(collectionName).find(condition).toArray(function (err, result) {
+        db.collection(collectionName).find(condition, params).toArray(function (err, result) {
             if (err) {
                 return callback(err, result);
             }
@@ -159,10 +159,10 @@ function deleteData(connectionString, dbName, collectionName, condition, callbac
 /**
  * @author Girijashankar Mishra
  * @description Read and Sort Data from MongoDB using condition
- * @param {connectionString,dbName,collectionName,condition,sortCondition} req 
+ * @param {connectionString,dbName,collectionName,condition,sortCondition, params} req 
  * @param {JSONObject} res 
  */
-var sort = function (connectionString, dbName, collectionName, condition, sortCondition, callback) {
+var sort = function (connectionString, dbName, collectionName, condition, sortCondition, params, callback) {
     try {
         var db = mongo.db(connectionString + dbName, {
             native_parser: false
@@ -170,7 +170,7 @@ var sort = function (connectionString, dbName, collectionName, condition, sortCo
         // var queryData = JSON.parse(condition);
         db.bind(collectionName);
 
-        db.collection(collectionName).find(condition).sort(sortCondition).toArray(function (err, result) {
+        db.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
             if (err) {
                 return callback(err, result);
             }
@@ -211,10 +211,10 @@ var index = function (connectionString, dbName, collectionName, indexCondition, 
 /**
  * @author Girijashankar Mishra
  * @description Read and Aggregate Data from MongoDB to process data records and return computed results. 
- * @param {connectionString,dbName,collectionName,condition,sortCondition} req 
+ * @param {connectionString,dbName,collectionName,aggregateCondition} req 
  * @param {JSONObject} res 
  */
-var aggregate = function (connectionString, dbName, collectionName, condition, aggregateCondition, callback) {
+var aggregate = function (connectionString, dbName, collectionName, aggregateCondition, callback) {
     try {
         var db = mongo.db(connectionString + dbName, {
             native_parser: false
@@ -237,13 +237,15 @@ var aggregate = function (connectionString, dbName, collectionName, condition, a
 /**
  * @author Girijashankar Mishra
  * @description Read and Limit Data from MongoDB, that is the number of documents that you want to be displayed. 
- * @param {connectionString,dbName,collectionName,condition,sortCondition} req 
+ * @param {connectionString,dbName,collectionName,condition,limit,params} req 
  * @param {JSONObject} res 
  */
-var limit = function (connectionString, dbName, collectionName, condition, limit, callback) {
+var limit = function (connectionString, dbName, collectionName, condition, limit, params, callback) {
     try {
         if (limit !== parseInt(limit, 10))
-            return callback({"error":"Limit should be integer value only."}, {});
+            return callback({
+                "error": "Limit should be integer value only."
+            }, {});
 
 
         var db = mongo.db(connectionString + dbName, {
@@ -252,7 +254,7 @@ var limit = function (connectionString, dbName, collectionName, condition, limit
         // var queryData = JSON.parse(condition);
         db.bind(collectionName);
 
-        db.collection(collectionName).find(condition).limit(limit).toArray(function (err, result) {
+        db.collection(collectionName).find(condition, params).limit(limit).toArray(function (err, result) {
             if (err) {
                 return callback(err, result);
             }
