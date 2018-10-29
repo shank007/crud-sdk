@@ -237,10 +237,10 @@ var aggregate = function (connectionString, dbName, collectionName, aggregateCon
 /**
  * @author Girijashankar Mishra
  * @description Read and Limit Data from MongoDB, that is the number of documents that you want to be displayed. 
- * @param {connectionString,dbName,collectionName,condition,limit,params} req 
+ * @param {connectionString,dbName,collectionName,condition,skip,limit,params} req 
  * @param {JSONObject} res 
  */
-var limit = function (connectionString, dbName, collectionName, condition, limit, params, callback) {
+var limit = function (connectionString, dbName, collectionName, condition, skip, limit, params, callback) {
     try {
         if (limit !== parseInt(limit, 10))
             return callback({
@@ -254,7 +254,7 @@ var limit = function (connectionString, dbName, collectionName, condition, limit
         // var queryData = JSON.parse(condition);
         db.bind(collectionName);
 
-        db.collection(collectionName).find(condition, params).limit(limit).toArray(function (err, result) {
+        db.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
             if (err) {
                 return callback(err, result);
             }

@@ -67,8 +67,8 @@ crud.aggregate(<mongodb-connection-string>, <db-name>, <collection-name>,  <aggr
             if (err) // do something
 });
 
-#Limit (Read and Sort Data from MongoDB using condition)
-crud.limit(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, <limit-in-numbers>, {Params Condition in JSON Format}, function (err, result) {
+#Limit (Read and Limit Data from MongoDB using condition)
+crud.limit(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, <skip-in-numbers>, <limit-in-numbers>, {Params Condition in JSON Format}, function (err, result) {
             if (err) // do something
 });
 ```
