@@ -19,6 +19,7 @@ describe('Create', function () {
             if (err) {
                 console.error(err);
             }
+            console.error(data);
             done();
         });
     });
