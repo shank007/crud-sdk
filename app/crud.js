@@ -248,6 +248,10 @@ var limit = function (connectionString, dbName, collectionName, condition, skip,
                 "error": "Limit should be integer value only."
             }, {});
 
+        if (skip !== parseInt(skip, 10))
+            return callback({
+                "error": "Skip should be integer value only."
+            }, {});
 
         var db = mongo.db(connectionString + dbName, {
             native_parser: false
