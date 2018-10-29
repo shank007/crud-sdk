@@ -28,7 +28,7 @@ function create(connectionString, dbName, collectionName, jsonData, callback) {
                 } else {
                     data["status"] = "200";
                     data["message"] = "Data Stored in DB";
-                    data["mongoId"] = result["_id"];
+                    data["mongoId"] = result["ops"][0]["_id"];
                     return callback(err, data);
                 }
             });
