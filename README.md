@@ -36,8 +36,23 @@ crud.update(<mongodb-connection-string>, <db-name>, <collection-name>, {Field/Da
             if (err) // do something
 });
 
+# UpdateById (Update already data stored in MongoDB using MongoId)
+crud.updateById(<mongodb-connection-string>, <db-name>, <collection-name>, {Field/Data to be updated in JSON}, <mongo-objectId>, function (err, result) {
+            if (err) // do something
+});
+
+# UpdateMultiple (Update multiple records that are already data stored in MongoDB)
+crud.updateMultiple(<mongodb-connection-string>, <db-name>, <collection-name>, {Field/Data to be updated in JSON}, {Update Condition in JSON}, function (err, result) {
+            if (err) // do something
+});
+
 # Delete (Delete a data from MongoDB)
 crud.delete(<mongodb-connection-string>, <db-name>, <collection-name>, {Delete Condition in JSON}, function (err, result) {
+            if (err) // do something
+});
+
+# DeleteById (Delete a data from MongoDB using MongoId)
+crud.deleteById(<mongodb-connection-string>, <db-name>, <collection-name>, <mongo-objectId>, function (err, result) {
             if (err) // do something
 });
 

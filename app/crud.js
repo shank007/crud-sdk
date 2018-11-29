@@ -98,7 +98,7 @@ var readByCondition = function (connectionString, dbName, collectionName, condit
 
 /**
  * @author Girijashankar Mishra
- * @description Update Data in MongoDB using condition
+ * @description Update Single Records in MongoDB using condition
  * @param {connectionString, dbName,collectionName,jsonData,condition} req 
  * @param {JSONObject} res 
  */
@@ -128,7 +128,71 @@ function updateData(connectionString, dbName, collectionName, jsonData, conditio
 
 /**
  * @author Girijashankar Mishra
- * @description Read Data from MongoDB using condition
+ * @description Update Single Records in MongoDB using Mongo Id
+ * @param {connectionString, dbName,collectionName,jsonData,mongoId} req 
+ * @param {JSONObject} res 
+ */
+function updateById(connectionString, dbName, collectionName, jsonData, mongoId, callback) {
+    try {
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: true
+        });
+        db.bind(collectionName);
+        var o_id = new mongo.ObjectID(mongoId);
+        db.collection(collectionName).update({
+            _id: o_id
+        }, {
+            $set: jsonData
+        }, function (err, result) {
+            var data = {};
+            if (err) {
+                return callback(err, result);
+            } else {
+                data["status"] = "200";
+                data["message"] = "Data Updated in DB";
+                return callback(err, data);
+            }
+        });
+        db.close();
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+/**
+ * @author Girijashankar Mishra
+ * @description Update Multiple Records in MongoDB using condition
+ * @param {connectionString, dbName,collectionName,jsonData,condition} req 
+ * @param {JSONObject} res 
+ */
+function updateMultiple(connectionString, dbName, collectionName, jsonData, condition, callback) {
+    try {
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: true
+        });
+        db.bind(collectionName);
+        db.collection(collectionName).update(condition, {
+            $set: jsonData
+        },{w:1, multi: true}, function (err, result) {
+            var data = {};
+            if (err) {
+                return callback(err, result);
+            } else {
+                data["status"] = "200";
+                data["message"] = "Data Updated in DB";
+                return callback(err, data);
+            }
+        });
+        db.close();
+    } catch (err) {
+        throw err;
+    }
+}
+
+/**
+ * @author Girijashankar Mishra
+ * @description Delete Data from MongoDB using condition
  * @param {connectionString,dbName,collectionName,jsonData,condition} req 
  * @param {JSONObject} res 
  */
@@ -139,6 +203,40 @@ function deleteData(connectionString, dbName, collectionName, condition, callbac
         });
         db.bind(collectionName);
         db.collection(collectionName).remove(condition, function (err, result) {
+            var data = {};
+
+            if (err) {
+                return callback(err, result);
+            } else {
+                data["status"] = "200";
+                data["message"] = "Data Deleted from DB";
+                return callback(err, data);
+            }
+
+
+        });
+        db.close();
+    } catch (err) {
+        throw err;
+    }
+}
+
+/**
+ * @author Girijashankar Mishra
+ * @description Delete Data from MongoDB using MongoId
+ * @param {connectionString,dbName,collectionName,jsonData,mongoId} req 
+ * @param {JSONObject} res 
+ */
+function deleteById(connectionString, dbName, collectionName, mongoId, callback) {
+    try {
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: true
+        });
+        db.bind(collectionName);
+        var o_id = new mongo.ObjectID(mongoId);
+        db.collection(collectionName).remove({
+            _id: o_id
+        }, function (err, result) {
             var data = {};
 
             if (err) {
@@ -275,7 +373,10 @@ module.exports.create = create
 module.exports.readById = readById
 module.exports.readByCondition = readByCondition
 module.exports.update = updateData
+module.exports.updateById = updateById
+module.exports.updateMultiple = updateMultiple
 module.exports.delete = deleteData
+module.exports.deleteById = deleteById
 module.exports.sort = sort
 module.exports.index = index
 module.exports.aggregate = aggregate
