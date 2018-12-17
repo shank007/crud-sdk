@@ -76,6 +76,10 @@ crud.sort(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condi
             if (err) // do something
 });
 
+#SortByLimit (Read and Sort Data based on limit from MongoDB using condition)
+crud.sortByLimit(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, { Sort Condition in JSON Format }, <limit-in-numbers>, {Params Condition in JSON Format}, function (err, result) {
+            if (err) // do something
+});
 
 #Aggregate (Read and Aggregate Data from MongoDB to process data records and return computed results.)
 crud.aggregate(<mongodb-connection-string>, <db-name>, <collection-name>,  <aggregate-condition>, function (err, result) {
