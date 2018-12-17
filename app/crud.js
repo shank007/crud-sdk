@@ -283,6 +283,36 @@ var sort = function (connectionString, dbName, collectionName, condition, sortCo
 
 /**
  * @author Girijashankar Mishra
+ * @description Read and Sort Data based on limit from MongoDB using condition
+ * @param {connectionString,dbName,collectionName,condition,sortCondition, limit, params} req 
+ * @param {JSONObject} res 
+ */
+var sortByLimit = function (connectionString, dbName, collectionName, condition, sortCondition, limit, params, callback) {
+    try {
+        if (limit !== parseInt(limit, 10))
+            return callback({
+                "error": "Limit should be integer value only."
+            }, {});
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: false
+        });
+        // var queryData = JSON.parse(condition);
+        db.bind(collectionName);
+
+        db.collection(collectionName).find(condition, params).sort(sortCondition).limit(limit).toArray(function (err, result) {
+            if (err) {
+                return callback(err, result);
+            }
+            return callback(err, result);
+        });
+        db.close();
+    } catch (err) {
+        throw err;
+    }
+}
+
+/**
+ * @author Girijashankar Mishra
  * @description Indexes support the efficient resolution of queries for a collection
  * @param {connectionString,dbName,collectionName,indexCondition} req 
  * @param {JSONObject} res 
@@ -378,6 +408,7 @@ module.exports.updateMultiple = updateMultiple
 module.exports.delete = deleteData
 module.exports.deleteById = deleteById
 module.exports.sort = sort
+module.exports.sortByLimit = sortByLimit
 module.exports.index = index
 module.exports.aggregate = aggregate
 module.exports.limit = limit
