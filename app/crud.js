@@ -174,7 +174,10 @@ function updateMultiple(connectionString, dbName, collectionName, jsonData, cond
         db.bind(collectionName);
         db.collection(collectionName).update(condition, {
             $set: jsonData
-        },{w:1, multi: true}, function (err, result) {
+        }, {
+            w: 1,
+            multi: true
+        }, function (err, result) {
             var data = {};
             if (err) {
                 return callback(err, result);
@@ -287,11 +290,16 @@ var sort = function (connectionString, dbName, collectionName, condition, sortCo
  * @param {connectionString,dbName,collectionName,condition,sortCondition, limit, params} req 
  * @param {JSONObject} res 
  */
-var sortByLimit = function (connectionString, dbName, collectionName, condition, sortCondition, limit, params, callback) {
+var sortByLimit = function (connectionString, dbName, collectionName, condition, sortCondition, skip, limit, params, callback) {
     try {
         if (limit !== parseInt(limit, 10))
             return callback({
                 "error": "Limit should be integer value only."
+            }, {});
+
+        if (skip !== parseInt(skip, 10))
+            return callback({
+                "error": "Skip should be integer value only."
             }, {});
         var db = mongo.db(connectionString + dbName, {
             native_parser: false
@@ -299,7 +307,7 @@ var sortByLimit = function (connectionString, dbName, collectionName, condition,
         // var queryData = JSON.parse(condition);
         db.bind(collectionName);
 
-        db.collection(collectionName).find(condition, params).sort(sortCondition).limit(limit).toArray(function (err, result) {
+        db.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
             if (err) {
                 return callback(err, result);
             }
