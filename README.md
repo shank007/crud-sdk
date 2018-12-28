@@ -77,7 +77,7 @@ crud.sort(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condi
 });
 
 #SortByLimit (Read and Sort Data based on limit from MongoDB using condition)
-crud.sortByLimit(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, { Sort Condition in JSON Format }, <limit-in-numbers>, {Params Condition in JSON Format}, function (err, result) {
+crud.sortByLimit(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition in JSON Format}, { Sort Condition in JSON Format }, <skip-in-numbers>, <limit-in-numbers>, {Params Condition in JSON Format}, function (err, result) {
             if (err) // do something
 });
 
