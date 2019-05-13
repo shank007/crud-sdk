@@ -24,16 +24,16 @@ function create(connectionString, dbName, collectionName, jsonData, callback) {
             function (err, result) {
                 var data = {};
                 if (err) {
+                    db.close();
                     return callback(err, result);
                 } else {
                     data["status"] = "200";
                     data["message"] = "Data Stored in DB";
                     data["mongoId"] = result["ops"][0]["_id"];
+                    db.close();
                     return callback(err, data);
                 }
             });
-
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -59,11 +59,12 @@ var readById = function (connectionString, dbName, collectionName, id, params, c
             _id: o_id
         }).toArray(function (err, result) {
             if (err) {
+                db.close();
                 return callback(err, result);
             }
+            db.close();
             return callback(err, result);
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -86,11 +87,12 @@ var readByCondition = function (connectionString, dbName, collectionName, condit
 
         db.collection(collectionName).find(condition, params).toArray(function (err, result) {
             if (err) {
+                db.close();
                 return callback(err, result);
             }
+            db.close();
             return callback(err, result);
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -113,14 +115,15 @@ function updateData(connectionString, dbName, collectionName, jsonData, conditio
         }, function (err, result) {
             var data = {};
             if (err) {
+                db.close();
                 return callback(err, result);
             } else {
                 data["status"] = "200";
                 data["message"] = "Data Updated in DB";
+                db.close();
                 return callback(err, data);
             }
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -146,14 +149,15 @@ function updateById(connectionString, dbName, collectionName, jsonData, mongoId,
         }, function (err, result) {
             var data = {};
             if (err) {
+                db.close();
                 return callback(err, result);
             } else {
                 data["status"] = "200";
                 data["message"] = "Data Updated in DB";
+                db.close();
                 return callback(err, data);
             }
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -180,14 +184,15 @@ function updateMultiple(connectionString, dbName, collectionName, jsonData, cond
         }, function (err, result) {
             var data = {};
             if (err) {
+                db.close();
                 return callback(err, result);
             } else {
                 data["status"] = "200";
                 data["message"] = "Data Updated in DB";
+                db.close();
                 return callback(err, data);
             }
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -209,16 +214,17 @@ function deleteData(connectionString, dbName, collectionName, condition, callbac
             var data = {};
 
             if (err) {
+                db.close();
                 return callback(err, result);
             } else {
                 data["status"] = "200";
                 data["message"] = "Data Deleted from DB";
+                db.close();
                 return callback(err, data);
             }
 
 
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -243,16 +249,15 @@ function deleteById(connectionString, dbName, collectionName, mongoId, callback)
             var data = {};
 
             if (err) {
+                db.close();
                 return callback(err, result);
             } else {
                 data["status"] = "200";
                 data["message"] = "Data Deleted from DB";
+                db.close();
                 return callback(err, data);
             }
-
-
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -274,11 +279,12 @@ var sort = function (connectionString, dbName, collectionName, condition, sortCo
 
         db.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
             if (err) {
+                db.close();
                 return callback(err, result);
             }
+            db.close();
             return callback(err, result);
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -309,11 +315,12 @@ var sortByLimit = function (connectionString, dbName, collectionName, condition,
 
         db.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
             if (err) {
+                db.close();
                 return callback(err, result);
             }
+            db.close();
             return callback(err, result);
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -335,11 +342,12 @@ var index = function (connectionString, dbName, collectionName, indexCondition, 
 
         db.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
             if (err) {
+                db.close();
                 return callback(err, result);
             }
+            db.close();
             return callback(err, result);
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -361,11 +369,12 @@ var aggregate = function (connectionString, dbName, collectionName, aggregateCon
 
         db.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
             if (err) {
+                db.close();
                 return callback(err, result);
             }
+            db.close();
             return callback(err, result);
         });
-        db.close();
     } catch (err) {
         throw err;
     }
@@ -397,11 +406,12 @@ var limit = function (connectionString, dbName, collectionName, condition, skip,
 
         db.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
             if (err) {
+                db.close();
                 return callback(err, result);
             }
+            db.close();
             return callback(err, result);
         });
-        db.close();
     } catch (err) {
         throw err;
     }
