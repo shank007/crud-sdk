@@ -3,6 +3,7 @@ var engine = require('../app/crud');
 module.exports.create = engine.create
 module.exports.readById = engine.readById
 module.exports.readByCondition = engine.readByCondition
+module.exports.readByMultipleConditions = engine.readByMultipleConditions
 module.exports.update = engine.update
 module.exports.updateById = engine.updateById
 module.exports.updateMultiple = engine.updateMultiple

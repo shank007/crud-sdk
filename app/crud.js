@@ -100,6 +100,33 @@ var readByCondition = function (connectionString, dbName, collectionName, condit
 
 /**
  * @author Girijashankar Mishra
+ * @description Read Data from MongoDB using multiple conditions
+ * @param {connectionString,dbName,collectionName,condition1,condition2, params} req 
+ * @param {JSONObject} res 
+ */
+var readByMultipleConditions = function (connectionString, dbName, collectionName, condition1, condition2, params, callback) {
+    try {
+        var db = mongo.db(connectionString + dbName, {
+            native_parser: false
+        });
+        // var queryData = JSON.parse(condition);
+        db.bind(collectionName);
+
+        db.collection(collectionName).find(condition1, condition2, params).toArray(function (err, result) {
+            if (err) {
+                db.close();
+                return callback(err, result);
+            }
+            db.close();
+            return callback(err, result);
+        });
+    } catch (err) {
+        throw err;
+    }
+}
+
+/**
+ * @author Girijashankar Mishra
  * @description Update Single Records in MongoDB using condition
  * @param {connectionString, dbName,collectionName,jsonData,condition} req 
  * @param {JSONObject} res 
@@ -420,6 +447,7 @@ var limit = function (connectionString, dbName, collectionName, condition, skip,
 module.exports.create = create
 module.exports.readById = readById
 module.exports.readByCondition = readByCondition
+module.exports.readByMultipleConditions = readByMultipleConditions
 module.exports.update = updateData
 module.exports.updateById = updateById
 module.exports.updateMultiple = updateMultiple

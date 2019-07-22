@@ -66,6 +66,11 @@ crud.readByCondition(<mongodb-connection-string>, <db-name>, <collection-name>, 
             if (err) // do something
 });
 
+#ReadByMultipleConditions (Read Data from MongoDB using multiple condition)
+crud.readByMultipleConditions(<mongodb-connection-string>, <db-name>, <collection-name>, {Read Condition1 in JSON Format}, {Read Condition2 in JSON Format},{Params Condition in JSON Format}, function (err, result) {
+            if (err) // do something
+});
+
 #ReadAll (Read All Data from MongoDB for a collection)
 crud.readByCondition(<mongodb-connection-string>, <db-name>, <collection-name>, {}, function (err, result) {
             if (err) // do something
