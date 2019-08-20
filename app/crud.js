@@ -24,13 +24,13 @@ function create(collectionName, jsonData, callback) {
                 function (err, result) {
                     var data = {};
                     if (err) {
-                        db.close();
+                        // db.close();
                         return callback(err, result);
                     } else {
                         data["status"] = "200";
                         data["message"] = "Data Stored in DB";
                         data["mongoId"] = result["ops"][0]["_id"];
-                        db.close();
+                        // db.close();
                         return callback(err, data);
                     }
                 });
@@ -57,10 +57,10 @@ var readById = function (collectionName, id, params, callback) {
                 _id: o_id
             }, params).toArray(function (err, result) {
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 }
-                db.close();
+                // db.close();
                 return callback(err, result);
             });
         });
@@ -83,10 +83,10 @@ var readByCondition = function (collectionName, condition, params, callback) {
             // db.bind(collectionName);
             db.collection(collectionName).find(condition, params).toArray(function (err, result) {
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 }
-                db.close();
+                // db.close();
                 return callback(err, result);
             });
         });
@@ -108,10 +108,10 @@ var readByMultipleConditions = function (condition1, condition2, params, callbac
 
             db.collection(collectionName).find(condition1, condition2, params).toArray(function (err, result) {
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 }
-                db.close();
+                // db.close();
                 return callback(err, result);
             });
         });
@@ -135,12 +135,12 @@ function updateData(collectionName, jsonData, condition, callback) {
             }, function (err, result) {
                 var data = {};
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 } else {
                     data["status"] = "200";
                     data["message"] = "Data Updated in DB";
-                    db.close();
+                    // db.close();
                     return callback(err, data);
                 }
             });
@@ -168,12 +168,12 @@ function updateById(collectionName, jsonData, mongoId, callback) {
             }, function (err, result) {
                 var data = {};
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 } else {
                     data["status"] = "200";
                     data["message"] = "Data Updated in DB";
-                    db.close();
+                    // db.close();
                     return callback(err, data);
                 }
             });
@@ -202,12 +202,12 @@ function updateMultiple(collectionName, jsonData, condition, callback) {
             }, function (err, result) {
                 var data = {};
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 } else {
                     data["status"] = "200";
                     data["message"] = "Data Updated in DB";
-                    db.close();
+                    // db.close();
                     return callback(err, data);
                 }
             });
@@ -231,12 +231,12 @@ function deleteData(collectionName, condition, callback) {
                 var data = {};
 
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 } else {
                     data["status"] = "200";
                     data["message"] = "Data Deleted from DB";
-                    db.close();
+                    // db.close();
                     return callback(err, data);
                 }
             });
@@ -263,12 +263,12 @@ function deleteById(collectionName, mongoId, callback) {
                 var data = {};
 
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 } else {
                     data["status"] = "200";
                     data["message"] = "Data Deleted from DB";
-                    db.close();
+                    // db.close();
                     return callback(err, data);
                 }
             });
@@ -292,10 +292,10 @@ var sort = function (collectionName, condition, sortCondition, params, callback)
 
             db.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 }
-                db.close();
+                // db.close();
                 return callback(err, result);
             });
         });
@@ -326,10 +326,10 @@ var sortByLimit = function (collectionName, condition, sortCondition, skip, limi
 
             db.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 }
-                db.close();
+                // db.close();
                 return callback(err, result);
             });
         });
@@ -352,10 +352,10 @@ var index = function (collectionName, indexCondition, callback) {
 
             db.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 }
-                db.close();
+                // db.close();
                 return callback(err, result);
             });
         });
@@ -378,10 +378,10 @@ var aggregate = function (collectionName, aggregateCondition, callback) {
 
             db.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 }
-                db.close();
+                // db.close();
                 return callback(err, result);
             });
         });
@@ -413,10 +413,10 @@ var limit = function (collectionName, condition, skip, limit, params, callback) 
 
             db.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
                 if (err) {
-                    db.close();
+                    // db.close();
                     return callback(err, result);
                 }
-                db.close();
+                // db.close();
                 return callback(err, result);
             });
         });
