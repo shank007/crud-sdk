@@ -84,9 +84,6 @@ var readByCondition = function (collectionName, condition, params, callback) {
     try {
 
         initDatabases().then(db => {
-            // var queryData = JSON.parse(condition);
-            db.bind(collectionName);
-
             db.collection(collectionName).find(condition, params).toArray(function (err, result) {
                 if (err) {
                     db.close();
