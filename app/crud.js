@@ -9,14 +9,6 @@ var mongo = require('mongoskin');
 
 const initDatabases = require("../dbs");
 
-// initDatabases().then(dbs => {
-//     console.log(dbs);
-//     var dbName = process.env.dbName;
-//     dbs.collection('PetStore').find().toArray(function (err, result) {
-//         console.log(result)
-//     })
-// })
-
 /**
  * @author Girijashankar Mishra
  * @description Insert data in MongoDB
