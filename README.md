@@ -22,7 +22,7 @@ npm install crud-sdk
 npm install -S crud-sdk
 ```
 ## How to pass connectionString and dbName to crud-sdk 
-connectionString="<connection-string>" dbName="<db-name>" node <server-file-name>
+connectionString="connection-string" dbName="db-name" node server-file-name
 
 ## How to use crud-sdk
 ```sh
