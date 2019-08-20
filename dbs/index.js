@@ -7,6 +7,7 @@
  */
 
 const mongo = require('mongoskin');
+const MongoClient = mongo.MongoClient;  
 
 // Get Connsection String and Database Name from the environment variables set while 
 // running the application server.
@@ -27,16 +28,18 @@ try {
 }
 
 function connect(url) {
-    // return MongoClient.connect(url).then(client => client.db())
-    return mongo.db(url, {
-        native_parser: true
-    });
+    // console.log(MongoClient.connect(url))
+    return MongoClient.connect(url)
+    // return mongo.db(url, {
+    //     native_parser: true
+    // });
 }
 
 module.exports = async function () {
-    let databases = await Promise.all([connect(DB_URI)])
+    let databases = await Promise.resolve(connect(DB_URI))
     // console.log('Inside Index.js ====> ',databases)
-    return {
-        db: databases[0]
-    }
+    // return {
+    //     db: databases[0]
+    // }
+    return databases;
 }
