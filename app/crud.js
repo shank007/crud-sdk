@@ -7,63 +7,66 @@
  */
 var mongo = require('mongoskin');
 
+const initDatabases = require("../dbs");
+
+// initDatabases().then(dbs => {
+//     console.log(dbs);
+// })
+
 /**
  * @author Girijashankar Mishra
  * @description Insert data in MongoDB
- * @param {connectionString,dbName,collectionName,jsonData} req 
+ * @param {collectionName,jsonData} req 
  * @param {JSONObject} result 
  */
-function create(connectionString, dbName, collectionName, jsonData, callback) {
+function create(collectionName, jsonData, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: true
+        initDatabases().then(db => {
+            db.bind(collectionName);
+            db.collection(collectionName).insert(
+                jsonData,
+                function (err, result) {
+                    var data = {};
+                    if (err) {
+                        db.close();
+                        return callback(err, result);
+                    } else {
+                        data["status"] = "200";
+                        data["message"] = "Data Stored in DB";
+                        data["mongoId"] = result["ops"][0]["_id"];
+                        db.close();
+                        return callback(err, data);
+                    }
+                });
         });
-        db.bind(collectionName);
-        db.collection(collectionName).insert(
-            jsonData,
-            function (err, result) {
-                var data = {};
-                if (err) {
-                    db.close();
-                    return callback(err, result);
-                } else {
-                    data["status"] = "200";
-                    data["message"] = "Data Stored in DB";
-                    data["mongoId"] = result["ops"][0]["_id"];
-                    db.close();
-                    return callback(err, data);
-                }
-            });
     } catch (err) {
         throw err;
     }
-
 }
 
 
 /**
  * @author Girijashankar Mishra
  * @description Read Data from MongoDB using Mongo ObjectId
- * @param {connectionString, dbName,collectionName,id, params} req 
+ * @param {collectionName,id, params} req 
  * @param {JSONObject} res  
  */
-var readById = function (connectionString, dbName, collectionName, id, params, callback) {
+var readById = function (collectionName, id, params, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: false
-        }, params);
-        db.bind(collectionName);
-        var o_id = new mongo.ObjectID(id);
+        initDatabases().then(db => {
+            db.bind(collectionName);
+            var o_id = new mongo.ObjectID(id);
 
-        db.collection(collectionName).find({
-            _id: o_id
-        }).toArray(function (err, result) {
-            if (err) {
+            db.collection(collectionName).find({
+                _id: o_id
+            }, params).toArray(function (err, result) {
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                }
                 db.close();
                 return callback(err, result);
-            }
-            db.close();
-            return callback(err, result);
+            });
         });
     } catch (err) {
         throw err;
@@ -74,24 +77,24 @@ var readById = function (connectionString, dbName, collectionName, id, params, c
 /**
  * @author Girijashankar Mishra
  * @description Read Data from MongoDB using condition
- * @param {connectionString,dbName,collectionName,condition, params} req 
+ * @param {collectionName,condition, params} req 
  * @param {JSONObject} res 
  */
-var readByCondition = function (connectionString, dbName, collectionName, condition, params, callback) {
+var readByCondition = function (collectionName, condition, params, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: false
-        });
-        // var queryData = JSON.parse(condition);
-        db.bind(collectionName);
 
-        db.collection(collectionName).find(condition, params).toArray(function (err, result) {
-            if (err) {
+        initDatabases().then(db => {
+            // var queryData = JSON.parse(condition);
+            db.bind(collectionName);
+
+            db.collection(collectionName).find(condition, params).toArray(function (err, result) {
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                }
                 db.close();
                 return callback(err, result);
-            }
-            db.close();
-            return callback(err, result);
+            });
         });
     } catch (err) {
         throw err;
@@ -101,24 +104,22 @@ var readByCondition = function (connectionString, dbName, collectionName, condit
 /**
  * @author Girijashankar Mishra
  * @description Read Data from MongoDB using multiple conditions
- * @param {connectionString,dbName,collectionName,condition1,condition2, params} req 
+ * @param {collectionName,condition1,condition2, params} req 
  * @param {JSONObject} res 
  */
-var readByMultipleConditions = function (connectionString, dbName, collectionName, condition1, condition2, params, callback) {
+var readByMultipleConditions = function (condition1, condition2, params, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: false
-        });
-        // var queryData = JSON.parse(condition);
-        db.bind(collectionName);
+        initDatabases().then(db => {
+            db.bind(collectionName);
 
-        db.collection(collectionName).find(condition1, condition2, params).toArray(function (err, result) {
-            if (err) {
+            db.collection(collectionName).find(condition1, condition2, params).toArray(function (err, result) {
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                }
                 db.close();
                 return callback(err, result);
-            }
-            db.close();
-            return callback(err, result);
+            });
         });
     } catch (err) {
         throw err;
@@ -131,25 +132,24 @@ var readByMultipleConditions = function (connectionString, dbName, collectionNam
  * @param {connectionString, dbName,collectionName,jsonData,condition} req 
  * @param {JSONObject} res 
  */
-function updateData(connectionString, dbName, collectionName, jsonData, condition, callback) {
+function updateData(collectionName, jsonData, condition, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: true
-        });
-        db.bind(collectionName);
-        db.collection(collectionName).update(condition, {
-            $set: jsonData
-        }, function (err, result) {
-            var data = {};
-            if (err) {
-                db.close();
-                return callback(err, result);
-            } else {
-                data["status"] = "200";
-                data["message"] = "Data Updated in DB";
-                db.close();
-                return callback(err, data);
-            }
+        initDatabases().then(db => {
+            db.bind(collectionName);
+            db.collection(collectionName).update(condition, {
+                $set: jsonData
+            }, function (err, result) {
+                var data = {};
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                } else {
+                    data["status"] = "200";
+                    data["message"] = "Data Updated in DB";
+                    db.close();
+                    return callback(err, data);
+                }
+            });
         });
     } catch (err) {
         throw err;
@@ -162,28 +162,27 @@ function updateData(connectionString, dbName, collectionName, jsonData, conditio
  * @param {connectionString, dbName,collectionName,jsonData,mongoId} req 
  * @param {JSONObject} res 
  */
-function updateById(connectionString, dbName, collectionName, jsonData, mongoId, callback) {
+function updateById(collectionName, jsonData, mongoId, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: true
-        });
-        db.bind(collectionName);
-        var o_id = new mongo.ObjectID(mongoId);
-        db.collection(collectionName).update({
-            _id: o_id
-        }, {
-            $set: jsonData
-        }, function (err, result) {
-            var data = {};
-            if (err) {
-                db.close();
-                return callback(err, result);
-            } else {
-                data["status"] = "200";
-                data["message"] = "Data Updated in DB";
-                db.close();
-                return callback(err, data);
-            }
+        initDatabases().then(db => {
+            db.bind(collectionName);
+            var o_id = new mongo.ObjectID(mongoId);
+            db.collection(collectionName).update({
+                _id: o_id
+            }, {
+                $set: jsonData
+            }, function (err, result) {
+                var data = {};
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                } else {
+                    data["status"] = "200";
+                    data["message"] = "Data Updated in DB";
+                    db.close();
+                    return callback(err, data);
+                }
+            });
         });
     } catch (err) {
         throw err;
@@ -197,28 +196,27 @@ function updateById(connectionString, dbName, collectionName, jsonData, mongoId,
  * @param {connectionString, dbName,collectionName,jsonData,condition} req 
  * @param {JSONObject} res 
  */
-function updateMultiple(connectionString, dbName, collectionName, jsonData, condition, callback) {
+function updateMultiple(collectionName, jsonData, condition, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: true
-        });
-        db.bind(collectionName);
-        db.collection(collectionName).update(condition, {
-            $set: jsonData
-        }, {
-            w: 1,
-            multi: true
-        }, function (err, result) {
-            var data = {};
-            if (err) {
-                db.close();
-                return callback(err, result);
-            } else {
-                data["status"] = "200";
-                data["message"] = "Data Updated in DB";
-                db.close();
-                return callback(err, data);
-            }
+        initDatabases().then(db => {
+            db.bind(collectionName);
+            db.collection(collectionName).update(condition, {
+                $set: jsonData
+            }, {
+                w: 1,
+                multi: true
+            }, function (err, result) {
+                var data = {};
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                } else {
+                    data["status"] = "200";
+                    data["message"] = "Data Updated in DB";
+                    db.close();
+                    return callback(err, data);
+                }
+            });
         });
     } catch (err) {
         throw err;
@@ -228,29 +226,26 @@ function updateMultiple(connectionString, dbName, collectionName, jsonData, cond
 /**
  * @author Girijashankar Mishra
  * @description Delete Data from MongoDB using condition
- * @param {connectionString,dbName,collectionName,jsonData,condition} req 
+ * @param {collectionName,jsonData,condition} req 
  * @param {JSONObject} res 
  */
-function deleteData(connectionString, dbName, collectionName, condition, callback) {
+function deleteData(collectionName, condition, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: true
-        });
-        db.bind(collectionName);
-        db.collection(collectionName).remove(condition, function (err, result) {
-            var data = {};
+        initDatabases().then(db => {
+            db.bind(collectionName);
+            db.collection(collectionName).remove(condition, function (err, result) {
+                var data = {};
 
-            if (err) {
-                db.close();
-                return callback(err, result);
-            } else {
-                data["status"] = "200";
-                data["message"] = "Data Deleted from DB";
-                db.close();
-                return callback(err, data);
-            }
-
-
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                } else {
+                    data["status"] = "200";
+                    data["message"] = "Data Deleted from DB";
+                    db.close();
+                    return callback(err, data);
+                }
+            });
         });
     } catch (err) {
         throw err;
@@ -260,30 +255,29 @@ function deleteData(connectionString, dbName, collectionName, condition, callbac
 /**
  * @author Girijashankar Mishra
  * @description Delete Data from MongoDB using MongoId
- * @param {connectionString,dbName,collectionName,jsonData,mongoId} req 
+ * @param {collectionName,jsonData,mongoId} req 
  * @param {JSONObject} res 
  */
-function deleteById(connectionString, dbName, collectionName, mongoId, callback) {
+function deleteById(collectionName, mongoId, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: true
-        });
-        db.bind(collectionName);
-        var o_id = new mongo.ObjectID(mongoId);
-        db.collection(collectionName).remove({
-            _id: o_id
-        }, function (err, result) {
-            var data = {};
+        initDatabases().then(db => {
+            db.bind(collectionName);
+            var o_id = new mongo.ObjectID(mongoId);
+            db.collection(collectionName).remove({
+                _id: o_id
+            }, function (err, result) {
+                var data = {};
 
-            if (err) {
-                db.close();
-                return callback(err, result);
-            } else {
-                data["status"] = "200";
-                data["message"] = "Data Deleted from DB";
-                db.close();
-                return callback(err, data);
-            }
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                } else {
+                    data["status"] = "200";
+                    data["message"] = "Data Deleted from DB";
+                    db.close();
+                    return callback(err, data);
+                }
+            });
         });
     } catch (err) {
         throw err;
@@ -293,24 +287,23 @@ function deleteById(connectionString, dbName, collectionName, mongoId, callback)
 /**
  * @author Girijashankar Mishra
  * @description Read and Sort Data from MongoDB using condition
- * @param {connectionString,dbName,collectionName,condition,sortCondition, params} req 
+ * @param {collectionName,condition,sortCondition, params} req 
  * @param {JSONObject} res 
  */
-var sort = function (connectionString, dbName, collectionName, condition, sortCondition, params, callback) {
+var sort = function (collectionName, condition, sortCondition, params, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: false
-        });
-        // var queryData = JSON.parse(condition);
-        db.bind(collectionName);
+        initDatabases().then(db => {
+            // var queryData = JSON.parse(condition);
+            db.bind(collectionName);
 
-        db.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
-            if (err) {
+            db.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                }
                 db.close();
                 return callback(err, result);
-            }
-            db.close();
-            return callback(err, result);
+            });
         });
     } catch (err) {
         throw err;
@@ -320,10 +313,10 @@ var sort = function (connectionString, dbName, collectionName, condition, sortCo
 /**
  * @author Girijashankar Mishra
  * @description Read and Sort Data based on limit from MongoDB using condition
- * @param {connectionString,dbName,collectionName,condition,sortCondition, limit, params} req 
+ * @param {collectionName,condition,sortCondition, limit, params} req 
  * @param {JSONObject} res 
  */
-var sortByLimit = function (connectionString, dbName, collectionName, condition, sortCondition, skip, limit, params, callback) {
+var sortByLimit = function (collectionName, condition, sortCondition, skip, limit, params, callback) {
     try {
         if (limit !== parseInt(limit, 10))
             return callback({
@@ -334,19 +327,17 @@ var sortByLimit = function (connectionString, dbName, collectionName, condition,
             return callback({
                 "error": "Skip should be integer value only."
             }, {});
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: false
-        });
-        // var queryData = JSON.parse(condition);
-        db.bind(collectionName);
+        initDatabases().then(db => {
+            db.bind(collectionName);
 
-        db.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
-            if (err) {
+            db.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                }
                 db.close();
                 return callback(err, result);
-            }
-            db.close();
-            return callback(err, result);
+            });
         });
     } catch (err) {
         throw err;
@@ -356,24 +347,23 @@ var sortByLimit = function (connectionString, dbName, collectionName, condition,
 /**
  * @author Girijashankar Mishra
  * @description Indexes support the efficient resolution of queries for a collection
- * @param {connectionString,dbName,collectionName,indexCondition} req 
+ * @param {collectionName,indexCondition} req 
  * @param {JSONObject} res 
  */
-var index = function (connectionString, dbName, collectionName, indexCondition, callback) {
+var index = function (collectionName, indexCondition, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: false
-        });
-        // var queryData = JSON.parse(condition);
-        db.bind(collectionName);
+        initDatabases().then(db => {
+            // var queryData = JSON.parse(condition);
+            db.bind(collectionName);
 
-        db.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
-            if (err) {
+            db.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                }
                 db.close();
                 return callback(err, result);
-            }
-            db.close();
-            return callback(err, result);
+            });
         });
     } catch (err) {
         throw err;
@@ -383,24 +373,23 @@ var index = function (connectionString, dbName, collectionName, indexCondition, 
 /**
  * @author Girijashankar Mishra
  * @description Read and Aggregate Data from MongoDB to process data records and return computed results. 
- * @param {connectionString,dbName,collectionName,aggregateCondition} req 
+ * @param {collectionName,aggregateCondition} req 
  * @param {JSONObject} res 
  */
-var aggregate = function (connectionString, dbName, collectionName, aggregateCondition, callback) {
+var aggregate = function (collectionName, aggregateCondition, callback) {
     try {
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: false
-        });
-        // var queryData = JSON.parse(condition);
-        db.bind(collectionName);
+        initDatabases().then(db => {
+            // var queryData = JSON.parse(condition);
+            db.bind(collectionName);
 
-        db.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
-            if (err) {
+            db.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                }
                 db.close();
                 return callback(err, result);
-            }
-            db.close();
-            return callback(err, result);
+            });
         });
     } catch (err) {
         throw err;
@@ -410,10 +399,10 @@ var aggregate = function (connectionString, dbName, collectionName, aggregateCon
 /**
  * @author Girijashankar Mishra
  * @description Read and Limit Data from MongoDB, that is the number of documents that you want to be displayed. 
- * @param {connectionString,dbName,collectionName,condition,skip,limit,params} req 
+ * @param {collectionName,condition,skip,limit,params} req 
  * @param {JSONObject} res 
  */
-var limit = function (connectionString, dbName, collectionName, condition, skip, limit, params, callback) {
+var limit = function (collectionName, condition, skip, limit, params, callback) {
     try {
         if (limit !== parseInt(limit, 10))
             return callback({
@@ -425,19 +414,17 @@ var limit = function (connectionString, dbName, collectionName, condition, skip,
                 "error": "Skip should be integer value only."
             }, {});
 
-        var db = mongo.db(connectionString + dbName, {
-            native_parser: false
-        });
-        // var queryData = JSON.parse(condition);
-        db.bind(collectionName);
+        initDatabases().then(db => {
+            db.bind(collectionName);
 
-        db.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
-            if (err) {
+            db.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
+                if (err) {
+                    db.close();
+                    return callback(err, result);
+                }
                 db.close();
                 return callback(err, result);
-            }
-            db.close();
-            return callback(err, result);
+            });
         });
     } catch (err) {
         throw err;
