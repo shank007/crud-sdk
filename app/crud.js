@@ -101,7 +101,7 @@ var readByCondition = function (collectionName, condition, params, callback) {
  * @param {collectionName,condition1,condition2, params} req 
  * @param {JSONObject} res 
  */
-var readByMultipleConditions = function (condition1, condition2, params, callback) {
+var readByMultipleConditions = function (collectionName, condition1, condition2, params, callback) {
     try {
         initDatabases().then(db => {
             // db.bind(collectionName);
