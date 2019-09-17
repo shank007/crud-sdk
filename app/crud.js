@@ -26,11 +26,14 @@ try {
 }
 
 // Create the db connection
-MongoClient.connect(DB_URI, function(err, db) {  
-    assert.equal(null, err);
-    initDatabases=db;
-    }
-);
+exports.connect = function(callback) {
+    MongoClient.connect(DB_URI, function(err, database) {
+      if( err ) throw err;
+      initDatabases = database;
+      callback();
+    })
+}
+console.log("initDatabases ====> ",initDatabases);
 
 /**
  * @author Girijashankar Mishra
