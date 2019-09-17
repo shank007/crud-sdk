@@ -5,9 +5,8 @@
  * @version 1.0.0
  * @since 14-August-2018
  */
-var mongo = require('mongoskin');
-
-const initDatabases = require("../dbs");
+const dbService = require("../dbs");
+const initDatabases = dbService.db;
 
 /**
  * @author Girijashankar Mishra
