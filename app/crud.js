@@ -5,8 +5,32 @@
  * @version 1.0.0
  * @since 14-August-2018
  */
-const dbService = require("../dbs");
-const initDatabases = dbService.db;
+// const dbService = require("../dbs");
+const mongo = require('mongoskin');
+const MongoClient = mongo.MongoClient;  
+var initDatabases;
+
+// Get Connsection String and Database Name from the environment variables set while 
+// running the application server.
+const DB_URI = process.env.connectionString + process.env.dbName;
+try {
+    if (!process.env.connectionString) {
+        throw "Please provide the ConnectionString."
+    }
+
+    if (!process.env.dbName) {
+        throw "Please provide the DbName."
+    }
+} catch (err) {
+    throw err;
+}
+
+// Create the db connection
+MongoClient.connect(DB_URI, function(err, db) {  
+    assert.equal(null, err);
+    initDatabases=db;
+    }
+);
 
 /**
  * @author Girijashankar Mishra
@@ -16,9 +40,9 @@ const initDatabases = dbService.db;
  */
 function create(collectionName, jsonData, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
-            db.collection(collectionName).insert(
+            initDatabases.collection(collectionName).insert(
                 jsonData,
                 function (err, result) {
                     var data = {};
@@ -33,8 +57,7 @@ function create(collectionName, jsonData, callback) {
                         return callback(err, data);
                     }
                 });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -49,11 +72,11 @@ function create(collectionName, jsonData, callback) {
  */
 var readById = function (collectionName, id, params, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
             var o_id = new mongo.ObjectID(id);
 
-            db.collection(collectionName).find({
+            initDatabases.collection(collectionName).find({
                 _id: o_id
             }, params).toArray(function (err, result) {
                 if (err) {
@@ -63,8 +86,7 @@ var readById = function (collectionName, id, params, callback) {
                 // db.close();
                 return callback(err, result);
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -80,9 +102,9 @@ var readById = function (collectionName, id, params, callback) {
 var readByCondition = function (collectionName, condition, params, callback) {
     try {
 
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
-            db.collection(collectionName).find(condition, params).toArray(function (err, result) {
+            initDatabases.collection(collectionName).find(condition, params).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -90,8 +112,7 @@ var readByCondition = function (collectionName, condition, params, callback) {
                 // db.close();
                 return callback(err, result);
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -105,10 +126,10 @@ var readByCondition = function (collectionName, condition, params, callback) {
  */
 var readByMultipleConditions = function (collectionName, condition1, condition2, params, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
 
-            db.collection(collectionName).find(condition1, condition2, params).toArray(function (err, result) {
+            initDatabases.collection(collectionName).find(condition1, condition2, params).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -116,8 +137,7 @@ var readByMultipleConditions = function (collectionName, condition1, condition2,
                 // db.close();
                 return callback(err, result);
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -131,9 +151,9 @@ var readByMultipleConditions = function (collectionName, condition1, condition2,
  */
 function updateData(collectionName, jsonData, condition, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
-            db.collection(collectionName).update(condition, {
+            initDatabases.collection(collectionName).update(condition, {
                 $set: jsonData
             }, function (err, result) {
                 var data = {};
@@ -147,8 +167,7 @@ function updateData(collectionName, jsonData, condition, callback) {
                     return callback(err, data);
                 }
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -162,10 +181,10 @@ function updateData(collectionName, jsonData, condition, callback) {
  */
 function updateById(collectionName, jsonData, mongoId, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
             var o_id = new mongo.ObjectID(mongoId);
-            db.collection(collectionName).update({
+            initDatabases.collection(collectionName).update({
                 _id: o_id
             }, {
                 $set: jsonData
@@ -181,8 +200,7 @@ function updateById(collectionName, jsonData, mongoId, callback) {
                     return callback(err, data);
                 }
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -197,9 +215,9 @@ function updateById(collectionName, jsonData, mongoId, callback) {
  */
 function updateMultiple(collectionName, jsonData, condition, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
-            db.collection(collectionName).update(condition, {
+            initDatabases.collection(collectionName).update(condition, {
                 $set: jsonData
             }, {
                 w: 1,
@@ -216,8 +234,7 @@ function updateMultiple(collectionName, jsonData, condition, callback) {
                     return callback(err, data);
                 }
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -231,9 +248,9 @@ function updateMultiple(collectionName, jsonData, condition, callback) {
  */
 function deleteData(collectionName, condition, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
-            db.collection(collectionName).remove(condition, function (err, result) {
+            initDatabases.collection(collectionName).remove(condition, function (err, result) {
                 var data = {};
 
                 if (err) {
@@ -246,8 +263,7 @@ function deleteData(collectionName, condition, callback) {
                     return callback(err, data);
                 }
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -261,10 +277,10 @@ function deleteData(collectionName, condition, callback) {
  */
 function deleteById(collectionName, mongoId, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
             var o_id = new mongo.ObjectID(mongoId);
-            db.collection(collectionName).remove({
+            initDatabases.collection(collectionName).remove({
                 _id: o_id
             }, function (err, result) {
                 var data = {};
@@ -279,8 +295,7 @@ function deleteById(collectionName, mongoId, callback) {
                     return callback(err, data);
                 }
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -294,11 +309,11 @@ function deleteById(collectionName, mongoId, callback) {
  */
 var sort = function (collectionName, condition, sortCondition, params, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // var queryData = JSON.parse(condition);
             // db.bind(collectionName);
 
-            db.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
+            initDatabases.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -306,8 +321,7 @@ var sort = function (collectionName, condition, sortCondition, params, callback)
                 // db.close();
                 return callback(err, result);
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -330,10 +344,10 @@ var sortByLimit = function (collectionName, condition, sortCondition, skip, limi
             return callback({
                 "error": "Skip should be integer value only."
             }, {});
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
 
-            db.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
+            initDatabases.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -341,8 +355,7 @@ var sortByLimit = function (collectionName, condition, sortCondition, skip, limi
                 // db.close();
                 return callback(err, result);
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -356,11 +369,11 @@ var sortByLimit = function (collectionName, condition, sortCondition, skip, limi
  */
 var index = function (collectionName, indexCondition, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // var queryData = JSON.parse(condition);
             // db.bind(collectionName);
 
-            db.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
+            initDatabases.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -368,8 +381,7 @@ var index = function (collectionName, indexCondition, callback) {
                 // db.close();
                 return callback(err, result);
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -383,11 +395,11 @@ var index = function (collectionName, indexCondition, callback) {
  */
 var aggregate = function (collectionName, aggregateCondition, callback) {
     try {
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // var queryData = JSON.parse(condition);
             // db.bind(collectionName);
 
-            db.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
+            initDatabases.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -395,8 +407,7 @@ var aggregate = function (collectionName, aggregateCondition, callback) {
                 // db.close();
                 return callback(err, result);
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
@@ -420,10 +431,10 @@ var limit = function (collectionName, condition, skip, limit, params, callback) 
                 "error": "Skip should be integer value only."
             }, {});
 
-        initDatabases().then(db => {
+        // initDatabases().then(db => {
             // db.bind(collectionName);
 
-            db.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
+            initDatabases.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -431,8 +442,7 @@ var limit = function (collectionName, condition, skip, limit, params, callback) 
                 // db.close();
                 return callback(err, result);
             });
-            db.close();
-        });
+        // });
     } catch (err) {
         throw err;
     }
