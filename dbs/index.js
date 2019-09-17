@@ -33,7 +33,7 @@ try {
  * @param {JSONObject} result 
  */
 function connect(url) {
-    return MongoClient.connect(url)
+    return MongoClient.connect(url);
 }
 
 module.exports = async function () {

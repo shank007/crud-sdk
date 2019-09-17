@@ -5,35 +5,25 @@
  * @version 1.0.0
  * @since 14-August-2018
  */
-// const dbService = require("../dbs");
-const mongo = require('mongoskin');
-const MongoClient = mongo.MongoClient;  
-var initDatabases;
+// var mongo = require('mongoskin');
 
-// Get Connsection String and Database Name from the environment variables set while 
-// running the application server.
-const DB_URI = process.env.connectionString + process.env.dbName;
-try {
-    if (!process.env.connectionString) {
-        throw "Please provide the ConnectionString."
-    }
+// const initDatabases = require("../dbs");
 
-    if (!process.env.dbName) {
-        throw "Please provide the DbName."
-    }
-} catch (err) {
-    throw err;
-}
 
-// Create the db connection
-exports.connect = function(callback) {
-    MongoClient.connect(DB_URI, function(err, database) {
-      if( err ) throw err;
-      initDatabases = database;
-      callback();
-    })
-}
-console.log("initDatabases ====> ",initDatabases);
+var MongoClient = require('mongodb').MongoClient;
+var db;
+
+// Initialize connection once
+MongoClient.connect("mongodb://localhost:27017/integration_test", function(err, database) {
+  if(err) throw err;
+
+  db = database;
+
+  // Start the application after the database connection is ready
+  app.listen(3000);
+  console.log("Listening on port 3000");
+});
+
 
 /**
  * @author Girijashankar Mishra
@@ -45,7 +35,7 @@ function create(collectionName, jsonData, callback) {
     try {
         // initDatabases().then(db => {
             // db.bind(collectionName);
-            initDatabases.collection(collectionName).insert(
+            db.collection(collectionName).insert(
                 jsonData,
                 function (err, result) {
                     var data = {};
@@ -79,7 +69,7 @@ var readById = function (collectionName, id, params, callback) {
             // db.bind(collectionName);
             var o_id = new mongo.ObjectID(id);
 
-            initDatabases.collection(collectionName).find({
+            db.collection(collectionName).find({
                 _id: o_id
             }, params).toArray(function (err, result) {
                 if (err) {
@@ -107,7 +97,7 @@ var readByCondition = function (collectionName, condition, params, callback) {
 
         // initDatabases().then(db => {
             // db.bind(collectionName);
-            initDatabases.collection(collectionName).find(condition, params).toArray(function (err, result) {
+            db.collection(collectionName).find(condition, params).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -132,7 +122,7 @@ var readByMultipleConditions = function (collectionName, condition1, condition2,
         // initDatabases().then(db => {
             // db.bind(collectionName);
 
-            initDatabases.collection(collectionName).find(condition1, condition2, params).toArray(function (err, result) {
+            db.collection(collectionName).find(condition1, condition2, params).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -156,7 +146,7 @@ function updateData(collectionName, jsonData, condition, callback) {
     try {
         // initDatabases().then(db => {
             // db.bind(collectionName);
-            initDatabases.collection(collectionName).update(condition, {
+            db.collection(collectionName).update(condition, {
                 $set: jsonData
             }, function (err, result) {
                 var data = {};
@@ -187,7 +177,7 @@ function updateById(collectionName, jsonData, mongoId, callback) {
         // initDatabases().then(db => {
             // db.bind(collectionName);
             var o_id = new mongo.ObjectID(mongoId);
-            initDatabases.collection(collectionName).update({
+            db.collection(collectionName).update({
                 _id: o_id
             }, {
                 $set: jsonData
@@ -220,7 +210,7 @@ function updateMultiple(collectionName, jsonData, condition, callback) {
     try {
         // initDatabases().then(db => {
             // db.bind(collectionName);
-            initDatabases.collection(collectionName).update(condition, {
+            db.collection(collectionName).update(condition, {
                 $set: jsonData
             }, {
                 w: 1,
@@ -253,7 +243,7 @@ function deleteData(collectionName, condition, callback) {
     try {
         // initDatabases().then(db => {
             // db.bind(collectionName);
-            initDatabases.collection(collectionName).remove(condition, function (err, result) {
+            db.collection(collectionName).remove(condition, function (err, result) {
                 var data = {};
 
                 if (err) {
@@ -283,7 +273,7 @@ function deleteById(collectionName, mongoId, callback) {
         // initDatabases().then(db => {
             // db.bind(collectionName);
             var o_id = new mongo.ObjectID(mongoId);
-            initDatabases.collection(collectionName).remove({
+            db.collection(collectionName).remove({
                 _id: o_id
             }, function (err, result) {
                 var data = {};
@@ -316,7 +306,7 @@ var sort = function (collectionName, condition, sortCondition, params, callback)
             // var queryData = JSON.parse(condition);
             // db.bind(collectionName);
 
-            initDatabases.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
+            db.collection(collectionName).find(condition, params).sort(sortCondition).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -350,7 +340,7 @@ var sortByLimit = function (collectionName, condition, sortCondition, skip, limi
         // initDatabases().then(db => {
             // db.bind(collectionName);
 
-            initDatabases.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
+            db.collection(collectionName).find(condition, params).sort(sortCondition).skip(skip).limit(limit).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -376,7 +366,7 @@ var index = function (collectionName, indexCondition, callback) {
             // var queryData = JSON.parse(condition);
             // db.bind(collectionName);
 
-            initDatabases.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
+            db.collection(collectionName).ensureIndex(indexCondition, function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -402,7 +392,7 @@ var aggregate = function (collectionName, aggregateCondition, callback) {
             // var queryData = JSON.parse(condition);
             // db.bind(collectionName);
 
-            initDatabases.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
+            db.collection(collectionName).aggregate(aggregateCondition, function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
@@ -437,7 +427,7 @@ var limit = function (collectionName, condition, skip, limit, params, callback) 
         // initDatabases().then(db => {
             // db.bind(collectionName);
 
-            initDatabases.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
+            db.collection(collectionName).find(condition, params).skip(skip).limit(limit).toArray(function (err, result) {
                 if (err) {
                     // db.close();
                     return callback(err, result);
