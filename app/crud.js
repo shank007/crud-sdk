@@ -8,20 +8,30 @@
 // var mongo = require('mongoskin');
 
 // const initDatabases = require("../dbs");
+// Get Connsection String and Database Name from the environment variables set while 
+// running the application server.
+const DB_URI = process.env.connectionString + process.env.dbName;
+try {
+    if (!process.env.connectionString) {
+        throw "Please provide the ConnectionString."
+    }
 
+    if (!process.env.dbName) {
+        throw "Please provide the DbName."
+    }
+
+    
+} catch (err) {
+    throw err;
+}
 
 var MongoClient = require('mongodb').MongoClient;
 var db;
 
 // Initialize connection once
-MongoClient.connect("mongodb://localhost:27017/integration_test", function(err, database) {
+MongoClient.connect(DB_URI, function(err, database) {
   if(err) throw err;
-
   db = database;
-
-  // Start the application after the database connection is ready
-  app.listen(3000);
-  console.log("Listening on port 3000");
 });
 
 
