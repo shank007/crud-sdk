@@ -21,6 +21,7 @@ try {
     throw err;
 }
 
+var mongo = require('mongoskin');
 var MongoClient = require('mongodb').MongoClient;
 var db;
 
