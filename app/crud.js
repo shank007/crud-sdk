@@ -26,7 +26,10 @@ var MongoClient = require('mongodb').MongoClient;
 var db;
 
 // Initialize connection once
-MongoClient.connect(DB_URI, function (err, database) {
+MongoClient.connect(DB_URI, {  
+    poolSize: 20
+    // other options can go here
+  }, function (err, database) {
     if (err) throw err;
     db = database;
 });
