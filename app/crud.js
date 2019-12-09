@@ -27,7 +27,7 @@ var db;
 
 // Initialize connection once
 MongoClient.connect(DB_URI, {  
-    poolSize: 20
+    poolSize: 100
     // other options can go here
   }, function (err, database) {
     if (err) throw err;
