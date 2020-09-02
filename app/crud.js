@@ -27,7 +27,8 @@ var db;
 
 // Initialize connection once
 MongoClient.connect(DB_URI, {  
-    poolSize: 100
+    poolSize: 100,
+	reconnectTries: Number.MAX_VALUE,
     // other options can go here
   }, function (err, database) {
     if (err) throw err;
@@ -413,3 +414,4 @@ module.exports.sortByLimit = sortByLimit
 module.exports.index = index
 module.exports.aggregate = aggregate
 module.exports.limit = limit
+
